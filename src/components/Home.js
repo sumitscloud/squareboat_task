@@ -25,7 +25,7 @@ function Home(props) {
             <button className="button_secondary" onClick={handleLoginRoute}>Get Started</button>
           </div>
           <div className="right_side">
-            <img className="up_img" src="./image_1.png" />
+            <img className="up_img" src="./image_1.png" alt=""/>
           </div>
         </div>
         <div className="lower_div">

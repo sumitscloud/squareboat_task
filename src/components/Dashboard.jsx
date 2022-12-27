@@ -14,8 +14,6 @@ function Dashboard(props) {
   const [dataLength, setDataLength] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [id, setId] = useState(null);
-  const indexOfLastRecord = page * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const nPages = Math.ceil(dataLength / recordsPerPage)
 
   useEffect(() => {

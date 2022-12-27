@@ -3,7 +3,6 @@ import './App.css';
 import Home from './components/Home';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Router from './Router/Router';
 import PrivateRoutes from './Router/PrivateRoutes';
 import PublicRoutes from './Router/PublicRoutes';
 import Login from './components/Login';
