@@ -13,12 +13,9 @@ function Dashboard(props) {
   const [recordsPerPage, setRecordsPerPage] = useState(0);
   const [dataLength, setDataLength] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [nPages, setNPages] = useState()
   const [id, setId] = useState(null);
   const indexOfLastRecord = page * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  // Records to be displayed on the current page
-  // const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = Math.ceil(dataLength / recordsPerPage)
 
   useEffect(() => {
@@ -26,12 +23,10 @@ function Dashboard(props) {
       sessionStorage.getItem("token");
     getPostedJobs(page)
       .then((res) => {
-        console.log(res.data);
         if(res.data.code === 200){
         setData(res.data.data.data);
         setRecordsPerPage(res?.data?.data?.metadata?.limit);
         setDataLength(res.data?.data.metadata?.count);
-        // console.log(res?.data?.data?.metadata?.limit, res?.data?.metadata?.count);
       }
       })
       .catch((err) => {
@@ -39,10 +34,6 @@ function Dashboard(props) {
       });
   }, [page]);
 
-  // useEffect(() =>{
-  //   console.log(dataLength/recordsPerPage);
-  //   setNPages(Math.ceil(dataLength / recordsPerPage))
-  // },[dataLength, recordsPerPage])
 
   const openModal = (props) => {
     setIsModalOpen(true);
