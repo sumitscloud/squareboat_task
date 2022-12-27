@@ -10,6 +10,7 @@ function Dashboard(props) {
     const [page, setPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [id, setId] = useState(null);
+    
     useEffect(()=>{
         axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('token');
         getPostedJobs(page).then(res =>{
