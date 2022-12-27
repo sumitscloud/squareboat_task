@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Router/PrivateRoutes';
 
@@ -10,7 +11,15 @@ function Header(props) {
     }
     const handleLogout= () =>{
         sessionStorage.clear();
-        navigate('/')
+        navigate('/');
+        toast.success(() => (
+            <span>
+                <label style={{color: "#43AFFF"}}>Logout</label><br/>
+              You have successfully logged out.
+            </span>
+          ),{
+            position: "top-right"
+          })
     }
     return (
         <div className='header_main'>
@@ -19,7 +28,7 @@ function Header(props) {
             </div>
             <div>
                 {auth ? <div style={{"display": "flex"}} onClick={handleLogout}>
-                    <div className='round_class'> </div>
+                    <div className='round_class'> R</div>
                     <img src="./Icon-caret-down.svg" alt="" />
                     </div> :
                 <button className='primary_button' onClick={handleLoginRoute}> Login </button>}

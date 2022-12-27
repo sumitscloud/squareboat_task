@@ -4,53 +4,88 @@ import { Card } from "react-bootstrap";
 import { getPostedJobs } from "../services/service";
 import Header from "./Header";
 import Modal from "./Modal";
+import NoJobs from "./NoJobs";
+import Pagination from "./Pagination";
 
 function Dashboard(props) {
-    const [data, setData] = useState();
-    const [page, setPage] = useState(1);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [id, setId] = useState(null);
-    
-    useEffect(()=>{
-        axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('token');
-        getPostedJobs(page).then(res =>{
-            setData(res.data.data.data);
-        }).catch(err =>{
-            console.log("error", err);
-        })
-    },[page])
+  const [data, setData] = useState();
+  const [page, setPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(0);
+  const [dataLength, setDataLength] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [nPages, setNPages] = useState()
+  const [id, setId] = useState(null);
+  const indexOfLastRecord = page * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  // Records to be displayed on the current page
+  // const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages = Math.ceil(dataLength / recordsPerPage)
 
-    const openModal = (props) =>{
-        setIsModalOpen(true)
-        setId(props);
-    }
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] =
+      sessionStorage.getItem("token");
+    getPostedJobs(page)
+      .then((res) => {
+        console.log(res.data);
+        if(res.data.code === 200){
+        setData(res.data.data.data);
+        setRecordsPerPage(res?.data?.data?.metadata?.limit);
+        setDataLength(res.data?.data.metadata?.count);
+        // console.log(res?.data?.data?.metadata?.limit, res?.data?.metadata?.count);
+      }
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  }, [page]);
 
-    const closeModal = () =>{
-        setIsModalOpen(false);
-        setId(null);
-    }
+  // useEffect(() =>{
+  //   console.log(dataLength/recordsPerPage);
+  //   setNPages(Math.ceil(dataLength / recordsPerPage))
+  // },[dataLength, recordsPerPage])
+
+  const openModal = (props) => {
+    setIsModalOpen(true);
+    setId(props);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setId(null);
+  };
 
   return (
     <div>
-        <Modal isOpen={isModalOpen} onClose={() => closeModal()} id={id}/>
+      <Modal isOpen={isModalOpen} onClose={() => closeModal()} id={id} />
       <Header />
       <div className="main">
         <div>
-        <div style={{ color: "#ffffff" }}>Jobs posted by you</div>
-        <div className="card_list">{
-            data && data.map(item => {
-                return(
-          <Card  key={item.id} onClick={() =>openModal(item.id)} >
-            <Card.Body>
-              <Card.Title>{item.title}</Card.Title>
-              
-              <Card.Text>
-               {item.description}
-              </Card.Text>
-              <Card.Footer ><p>{item.location}</p>  <p>View Application</p></Card.Footer>
-            </Card.Body>
-          </Card>)})}
-        </div>
+          <div style={{ color: "#ffffff" }}>Jobs posted by you</div>
+          <div className="card_list">
+            {data?.length ? (
+              data.map((item) => {
+                return (
+                  <Card key={item.id} onClick={() => openModal(item.id)}>
+                    <Card.Body>
+                      <Card.Title>{item.title}</Card.Title>
+
+                      <Card.Text>{item.description}</Card.Text>
+                      <Card.Footer>
+                        <p>{item.location}</p> <p>View Application</p>
+                      </Card.Footer>
+                    </Card.Body>
+                  </Card>
+                );
+              })
+            ) : (
+              <NoJobs />
+            )}
+            {data?.length >= 20 ? <Pagination
+                nPages={nPages}
+                currentPage={page}
+                setCurrentPage={setPage}
+            /> : ""}
+          </div>
         </div>
       </div>
     </div>
